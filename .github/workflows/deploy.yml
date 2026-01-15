@@ -1,0 +1,127 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy-customers-api:
+    name: Deploy Customers API
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --workspace=customers/api
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+        run: echo "Deploying customers-api to ${{ github.event.inputs.environment || 'staging' }}"
+        # Add actual deployment commands here
+
+  deploy-customers-frontend:
+    name: Deploy Customers Frontend
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --workspace=customers/frontend
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+        run: echo "Deploying customers-frontend to ${{ github.event.inputs.environment || 'staging' }}"
+
+  deploy-managers-api:
+    name: Deploy Managers API
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --workspace=managers/api
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+        run: echo "Deploying managers-api to ${{ github.event.inputs.environment || 'staging' }}"
+
+  deploy-managers-frontend:
+    name: Deploy Managers Frontend
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --workspace=managers/frontend
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+        run: echo "Deploying managers-frontend to ${{ github.event.inputs.environment || 'staging' }}"
+
+  deploy-admin-dashboard:
+    name: Deploy Admin Dashboard
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build --workspace=admin/dashboard
+
+      - name: Deploy to ${{ github.event.inputs.environment || 'staging' }}
+        run: echo "Deploying admin-dashboard to ${{ github.event.inputs.environment || 'staging' }}"
