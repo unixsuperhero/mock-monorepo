@@ -1,0 +1,22 @@
+{
+  "name": "mock-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "customers/*",
+    "managers/*",
+    "admin/*",
+    "shared/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "prettier": "^3.0.0",
+    "eslint": "^8.45.0"
+  }
+}
