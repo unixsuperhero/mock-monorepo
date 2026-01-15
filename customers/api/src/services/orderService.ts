@@ -36,12 +36,34 @@ export class OrderService {
   }
 
   async create(data: CreateOrderDTO): Promise<Order> {
+    // Validate order data
+    if (!data.items || data.items.length === 0) {
+      throw new Error('Order must contain at least one item');
+    }
+
+    for (const item of data.items) {
+      if (item.quantity <= 0) {
+        throw new Error('Item quantity must be greater than 0');
+      }
+      if (item.unitPrice < 0) {
+        throw new Error('Item price cannot be negative');
+      }
+    }
+
+    if (!data.shippingAddress || !data.shippingAddress.street) {
+      throw new Error('Valid shipping address is required');
+    }
+
     const items = data.items.map((item) => ({
       ...item,
       subtotal: item.quantity * item.unitPrice,
     }));
 
     const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+
+    if (total <= 0) {
+      throw new Error('Order total must be greater than 0');
+    }
 
     const order: Order = {
       id: generateId(),
